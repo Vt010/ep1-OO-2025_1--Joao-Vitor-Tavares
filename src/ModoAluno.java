@@ -1,0 +1,260 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class ModoAluno implements ModoSistema{
+    private List<Aluno> alunos;
+    private Scanner sc;
+
+    public ModoAluno(){
+        this.alunos = new ArrayList<>();
+        this.sc = new Scanner(System.in);
+    }
+
+    @Override
+    public void iniciarModo() {
+        int opcao;
+        do {
+            System.out.println("\n--- MODO ALUNO ---");
+            System.out.println("1. Cadastrar aluno");
+            System.out.println("2. Editar aluno");
+            System.out.println("3. Listar alunos");
+            System.out.println("4. Matricular aluno em disciplina");
+            System.out.println("5. Trancar disciplina");
+            System.out.println("6. Listar disciplinas matriculadas");
+            System.out.println("7. Trancar semestre");
+            System.out.println("0. Voltar");
+            System.out.print("Escolha uma opção: ");
+            
+            opcao = sc.nextInt();
+            sc.nextLine(); 
+            
+            switch (opcao) {
+                case 1:
+                    cadastrarAluno();
+                    break;
+                case 2:
+                    editarAluno();
+                    break;
+                case 3:
+                    listarAlunos();
+                    break;
+                case 4:
+                    matricularAlunoDisciplina();
+                    break;
+                case 5:
+                    trancarDisciplina();
+                    break;
+                case 6:
+                    listarDisciplinasMatriculadas(); 
+                break;
+                case 7:
+                    trancarSemestre();
+                    break;
+                case 0:
+                    System.out.println("\n Retornando ao menu principal...");
+                    break;
+                default:
+                    System.out.println("Opção inválida!");
+            }
+        } while (opcao != 0);
+    }
+
+    private void cadastrarAluno() {
+        System.out.println("\n--- CADASTRAR ALUNO ---");
+        System.out.print("Nome: ");
+        String nome = sc.nextLine();
+        
+        System.out.print("Matrícula: ");
+        String matricula = sc.nextLine();
+        
+        // Verificar se matrícula já existe
+        if (alunoExiste(matricula)) {
+            System.out.println("Erro: Matrícula já cadastrada!");
+            return;
+        }
+        
+        System.out.print("Curso: ");
+        String curso = sc.nextLine();
+        
+        System.out.print("É aluno especial? (S/N): ");
+        String especial = sc.nextLine();
+        
+        Aluno aluno;
+        if (especial.equalsIgnoreCase("S")) {
+            aluno = new AlunoEspecial(nome, matricula, curso);
+        } else {
+            aluno = new Aluno(nome, matricula, curso);
+        }
+        
+        alunos.add(aluno);
+        System.out.println("Aluno cadastrado com sucesso!");
+    }
+
+    private boolean alunoExiste(String matricula) {
+        for (Aluno aluno : alunos) {
+            if (aluno.getMatricula().equals(matricula)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void editarAluno() {
+        System.out.println("\n--- EDITAR ALUNO ---");
+        System.out.print("Digite a matrícula do aluno: ");
+        String matricula = sc.nextLine();
+        
+        Aluno aluno = buscarAluno(matricula);
+        if (aluno == null) {
+            System.out.println("Aluno não encontrado!");
+            return;
+        }
+        
+        System.out.println("Dados atuais:");
+        System.out.println("Nome: " + aluno.getNome());
+        System.out.println("Curso: " + aluno.getCurso());
+        
+        System.out.print("Novo nome (deixe em branco para manter): ");
+        String novoNome = sc.nextLine();
+        if (!novoNome.isEmpty()) {
+            aluno.setNome(novoNome);
+        }
+        
+        System.out.print("Novo curso (deixe em branco para manter): ");
+        String novoCurso = sc.nextLine();
+        if (!novoCurso.isEmpty()) {
+            aluno.setCurso(novoCurso);
+        }
+        
+        System.out.println("Dados atualizados com sucesso!");
+    }
+
+    private Aluno buscarAluno(String matricula) {
+        for (Aluno aluno : alunos) {
+            if (aluno.getMatricula().equals(matricula)) {
+                return aluno;
+            }
+        }
+        return null;
+    }
+
+    private void listarAlunos() {
+        System.out.println("\n--- LISTA DE ALUNOS ---");
+        if (alunos.isEmpty()) {
+            System.out.println("Nenhum aluno cadastrado.");
+            return;
+        }
+        
+        for (Aluno aluno : alunos) {
+            System.out.println("Matrícula: " + aluno.getMatricula());
+            System.out.println("Nome: " + aluno.getNome());
+            System.out.println("Curso: " + aluno.getCurso());
+            System.out.println("Tipo: " + (aluno instanceof AlunoEspecial ? "Especial" : "Normal"));
+            System.out.println("Status: " + (aluno.isTrancado() ? "Semestre trancado" : "Ativo"));
+            System.out.println("Disciplinas matriculadas: " + aluno.getDisciplinasMatriculadas());
+            System.out.println("--------------------");
+        }
+    }
+
+    //Métodos simplificados para demonstração
+    private void matricularAlunoDisciplina() {
+        System.out.println("\n--- MATRICULAR ALUNO EM DISCIPLINA ---");
+        System.out.print("Digite a matrícula do aluno: ");
+        String matricula = sc.nextLine();
+        
+        Aluno aluno = buscarAluno(matricula);
+        if (aluno == null) {
+            System.out.println("Aluno não encontrado!");
+            return;
+        }
+        
+        System.out.print("Digite o nome da disciplina: ");
+        String disciplina = sc.nextLine();
+        
+        // Em um sistema real, buscaríamos os dados da disciplina em outra classe
+        System.out.print("Digite o número de vagas disponíveis: ");
+        int vagas = sc.nextInt();
+        sc.nextLine();
+        
+        System.out.print("Digite os pré-requisitos (separados por vírgula, ou deixe em branco): ");
+        String preReqsStr = sc.nextLine();
+        List<String> preRequisitos = new ArrayList<>();
+        if (!preReqsStr.isEmpty()) {
+            String[] preReqsArray = preReqsStr.split(",");
+            for (String preReq : preReqsArray) {
+                preRequisitos.add(preReq.trim());
+            }
+        }
+        
+        if (aluno.matricularDisciplina(disciplina, vagas, preRequisitos)) {
+            System.out.println("Matrícula realizada com sucesso!");
+        } else {
+            System.out.println("Não foi possível realizar a matrícula. Verifique os pré-requisitos, vagas ou limite de disciplinas.");
+        }
+    }
+
+    private void trancarDisciplina() {
+        System.out.println("\n--- TRANCAR DISCIPLINA ---");
+        System.out.print("Digite a matrícula do aluno: ");
+        String matricula = sc.nextLine();
+        
+        Aluno aluno = buscarAluno(matricula);
+        if (aluno == null) {
+            System.out.println("Aluno não encontrado!");
+            return;
+        }
+        
+        System.out.print("Digite o nome da disciplina a trancar: ");
+        String disciplina = sc.nextLine();
+        
+        if (aluno.trancarDisciplina(disciplina)) {
+            System.out.println("Disciplina trancada com sucesso!");
+        } else {
+            System.out.println("Não foi possível trancar a disciplina. Verifique se o aluno está matriculado nela.");
+        }
+    }
+
+    private void listarDisciplinasMatriculadas() {
+        System.out.println("\n--- DISCIPLINAS MATRICULADAS ---");
+        System.out.print("Digite a matrícula do aluno: ");
+        String matricula = sc.nextLine();
+        
+        Aluno aluno = buscarAluno(matricula);
+        if (aluno == null) {
+            System.out.println("Aluno não encontrado!");
+            return;
+        }
+        
+        System.out.println("\nDisciplinas matriculadas por " + aluno.getNome() + ":");
+        List<String> disciplinas = aluno.getDisciplinasMatriculadas();
+        
+        if (disciplinas.isEmpty()) {
+            System.out.println("O aluno não está matriculado em nenhuma disciplina.");
+        } else {
+            for (String disciplina : disciplinas) {
+                System.out.println("- " + disciplina);
+            }
+        }
+    }
+
+    private void trancarSemestre() {
+        System.out.println("\n--- TRANCAR SEMESTRE ---");
+        System.out.print("Digite a matrícula do aluno: ");
+        String matricula = sc.nextLine();
+        
+        Aluno aluno = buscarAluno(matricula);
+        if (aluno == null) {
+            System.out.println("Aluno não encontrado!");
+            return;
+        }
+        
+        aluno.trancarSemestre();
+        System.out.println("Semestre trancado com sucesso! Todas as disciplinas foram removidas.");
+    }
+
+}
+    
+    
+    
+    

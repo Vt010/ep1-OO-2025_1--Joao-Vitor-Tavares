@@ -1,5 +1,8 @@
+
 public class App {
     public static void main(String[] args) throws Exception {
-        System.out.println("Hello, World!");
+        SistemaAcademicoFCTE sistema = new SistemaAcademicoFCTE();
+        sistema.iniciar();
+
     }
 }
