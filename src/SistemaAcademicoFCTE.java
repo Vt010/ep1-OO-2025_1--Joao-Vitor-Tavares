@@ -1,12 +1,19 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class SistemaAcademicoFCTE {
     private Scanner sc;
     private ModoAluno modoAluno;
+    private ModoDisciplinaTurma modoDisciplinaTurma;
     
     public SistemaAcademicoFCTE() {
         this.sc = new Scanner(System.in);
-        this.modoAluno = new ModoAluno();
+        List<Disciplina> disciplinasCompartilhadas = new ArrayList<>();
+        List<Turma> turmasCompartilhadas = new ArrayList<>();
+        
+        this.modoDisciplinaTurma = new ModoDisciplinaTurma(disciplinasCompartilhadas, turmasCompartilhadas);
+        this.modoAluno = new ModoAluno(disciplinasCompartilhadas, turmasCompartilhadas);
     }
     
     public void iniciar() {
@@ -29,6 +36,7 @@ public class SistemaAcademicoFCTE {
                     break;
                 case 2:
                     System.out.println("\nModo Disciplina selecionado!");
+                    modoDisciplinaTurma.iniciarModo();
                     break;
                 case 3:
                     System.out.println("\nModo Avaliação selecionado!");
