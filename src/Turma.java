@@ -12,8 +12,9 @@ public class Turma {
     private String horario;
     private int capacidadeMaxima;
     private List<String> alunosMatriculados; // Lista de matrículas
+    private String tipoFormula; //simples ou ponderada
 
-    public Turma(String codigo, Disciplina disciplina, String professor, String semestre, String formaAvaliacao, boolean presencial, String sala, String horario, int capacidadeMaxima) {
+    public Turma(String codigo, Disciplina disciplina, String professor, String semestre, String formaAvaliacao, boolean presencial, String sala, String horario, int capacidadeMaxima, String tipoFormula) { 
         this.codigo = codigo;
         this.disciplina = disciplina;
         this.professor = professor;
@@ -24,9 +25,14 @@ public class Turma {
         this.horario = horario;
         this.capacidadeMaxima = capacidadeMaxima;
         this.alunosMatriculados = new ArrayList<>();
+        this.tipoFormula = tipoFormula;
     }
 
     // Get
+    public String getTipoFormula() {
+        return tipoFormula;
+    }
+
     public String getCodigo(){
         return codigo;
     }

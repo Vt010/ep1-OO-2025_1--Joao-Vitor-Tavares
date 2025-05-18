@@ -6,12 +6,14 @@ public class SistemaAcademicoFCTE {
     private Scanner sc;
     private ModoAluno modoAluno;
     private ModoDisciplinaTurma modoDisciplinaTurma;
+    private ModoAvaliacaoFrequencia modoAvaliacaoFrequencia;
     
     public SistemaAcademicoFCTE() {
         this.sc = new Scanner(System.in);
         List<Disciplina> disciplinasCompartilhadas = new ArrayList<>();
         List<Turma> turmasCompartilhadas = new ArrayList<>();
-        
+
+        this.modoAvaliacaoFrequencia = new ModoAvaliacaoFrequencia(turmasCompartilhadas);
         this.modoDisciplinaTurma = new ModoDisciplinaTurma(disciplinasCompartilhadas, turmasCompartilhadas);
         this.modoAluno = new ModoAluno(disciplinasCompartilhadas, turmasCompartilhadas);
     }
@@ -40,6 +42,7 @@ public class SistemaAcademicoFCTE {
                     break;
                 case 3:
                     System.out.println("\nModo Avaliação selecionado!");
+                    modoAvaliacaoFrequencia.iniciarModo();
                     break;
                 case 0:
                     System.out.println("Encerrando o sistema...");

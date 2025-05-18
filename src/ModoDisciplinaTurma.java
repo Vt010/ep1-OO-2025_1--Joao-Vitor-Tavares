@@ -123,8 +123,7 @@ public class ModoDisciplinaTurma implements ModoSistema {
         int capacidade = sc.nextInt();
         sc.nextLine();
         
-        Turma novaTurma = new Turma(codigoTurma, disciplina, professor, semestre, 
-                                    formaAvaliacao, presencial, sala, horario, capacidade);
+        Turma novaTurma = new Turma(codigoTurma, disciplina, professor, semestre, formaAvaliacao, presencial, sala, horario, capacidade);
         turmas.add(novaTurma);
         System.out.println("Turma criada com sucesso!");
     }
